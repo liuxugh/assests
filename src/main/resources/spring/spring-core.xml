@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    
+    
+    <context:annotation-config/>
+    <context:component-scan base-package="com.owner"/>
+    <context:property-placeholder location="classpath:*.properties" file-encoding="UTF-8" ignore-unresolvable="true"/>
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <!-- StringHttpMessageConverter编码为UTF-8，防止乱码 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+                <property name="supportedMediaTypes">
+                    <list>
+                        <bean class="org.springframework.http.MediaType">
+                            <constructor-arg index="0" value="text"/>
+                            <constructor-arg index="1" value="plain"/>
+                            <constructor-arg index="2" value="UTF-8"/>
+                        </bean>
+                        <bean class="org.springframework.http.MediaType">
+                            <constructor-arg index="0" value="*"/>
+                            <constructor-arg index="1" value="*"/>
+                            <constructor-arg index="2" value="UTF-8"/>
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+
+            <!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+            <bean id="fastJsonHttpMessageConverter"
+                  class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+                <property name="features">
+                    <list>
+                        <array value-type="com.alibaba.fastjson.serializer.SerializerFeature">
+                            <value>DisableCircularReferenceDetect</value><!-- 解决json ref 问题 -->
+                        </array>
+                        <value>WriteMapNullValue</value>  <!-- 输出null值 -->
+                        <value>QuoteFieldNames</value><!-- key 使用双引号 -->
+                        <value>WriteNullListAsEmpty</value><!-- list为null时转成[] -->
+                        <value>WriteNullStringAsEmpty</value><!-- 字符串为null时转成“” -->
+                        <value>WriteNullNumberAsZero</value><!-- 数值字段如果为null,输出为0,而非null -->
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+        <property name="viewClass"  
+            value="org.springframework.web.servlet.view.JstlView" />  
+        <property name="prefix" value="/pages" />  
+        <property name="suffix" value=".jsp" />  
+    </bean>
+	<!--初始化appliationUtil类，并完成ApplicationContext的注入-->
+	<bean id="applicationContextUtil" class="com.owner.core.util.ApplicationContextUtil"></bean>
+	
+
+    <!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8" />
+        <!-- 指定所上传文件的总大小不能超过10485760000B。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
+        <property name="maxUploadSize" value="10485760000" />
+        <property name="maxInMemorySize" value="40960" />
+    </bean>
+
+    <!-- 拦截器   -->
+    <!-- <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+             <mvc:exclude-mapping path="/**/loginPage"/>
+             <mvc:exclude-mapping path="/**/userLogin"/>
+             <mvc:exclude-mapping path="/**/memberFee"/>
+             <mvc:exclude-mapping path="/**/registerPage"/>
+             <mvc:exclude-mapping path="/**/register/initC"/>
+             <mvc:exclude-mapping path="/**/register/initX"/>
+             <mvc:exclude-mapping path="/**/register/add"/>
+             <mvc:exclude-mapping path="/**/sys/anno/**/"/>
+              <mvc:exclude-mapping path="/**/login"/>
+            
+            <bean class="com.owner.core.interceptor.LoginInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors> -->
+    
+    <!-- 静态资源访问   -->
+    <mvc:default-servlet-handler/>
+    <mvc:resources location="/img/" mapping="/img/**" />  
+	<mvc:resources location="/css/" mapping="/css/**" />  
+	<mvc:resources location="/js/" mapping="/js/**" /> 
+    <mvc:resources location="/extends/" mapping="/extends/**" /> 
+     <!-- 事务配置 -->
+<!--     <bean id = "transactionManager" class = "org.springframework.jdbc.datasource.DataSourceTransactionManager"> -->
+<!--       <property name="dataSource" ref="dataSource"/> -->
+<!--     </bean> -->
+    <tx:annotation-driven/>
+  
+ </beans>

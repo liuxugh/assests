@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user">
+<select id="query_user_info" parameterType="java.util.Map"  resultType="com.owner.sys.login.entity.UserEntity">
+    SELECT
+	USER_ID AS userId,
+	USER_ACCOUNT AS userAccount,
+	USER_NAME AS userName,
+	USER_PASS AS userPass,
+	USER_STATUS AS userStatus,
+	TELPHONE AS telPhone,
+	EMAIL AS Email,
+	SEX AS sex,
+	DEPARTMENT_ID AS departmentId,
+	ROLE AS role
+FROM
+	tbl_user_login
+WHERE
+	USER_NAME =#{userName}
+</select>
+</mapper>
