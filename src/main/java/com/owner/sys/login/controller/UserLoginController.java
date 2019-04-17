@@ -29,12 +29,28 @@ public class UserLoginController {
 	private UserService userService;
 
 	
+	/** 
+	* @Description 方法描述: 登录页面<pre>
+	* @param  参数说明: <pre>    
+	* @return  返回值类型: String <pre>  
+	* @author 作者:  刘旭 <pre>
+	* @date 时间: Apr 18, 2019 12:00:30 AM <pre> 
+	* @throws 异常: <pre>
+	*/
 	@RequestMapping(value = "/loginPage",method=RequestMethod.GET)
 	public String LoginPage() {
 		ASSESTSLog.info(log, "welcome to assests manage system");
 		return LOGIN_PAGE;
 	}
 	
+	/** 
+	* @Description 方法描述: 用户登录 <pre>
+	* @param  参数说明: <pre>    
+	* @return  返回值类型: String <pre>  
+	* @author 作者:  刘旭 <pre>
+	* @date 时间: Apr 18, 2019 12:00:47 AM <pre> 
+	* @throws 异常: <pre>
+	*/
 	@RequestMapping(value="userLogin",method=RequestMethod.POST)
 	public String login(UserEntity userlogin,Model model,HttpServletRequest request) {
 		ASSESTSLog.info(log, "用户登录"+userlogin.getUserName());
