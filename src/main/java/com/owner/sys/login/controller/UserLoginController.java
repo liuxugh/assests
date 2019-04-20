@@ -72,4 +72,17 @@ public class UserLoginController {
 		}
 		return LOGIN_PAGE;
 	}
+	
+	/** 
+	* @Description 方法描述: 修改密码 <pre>
+	* @param  参数说明: <pre>    
+	* @return  返回值类型: String <pre>  
+	* @author 作者:  刘旭 <pre>
+	* @date 时间: Apr 20, 2019 10:24:18 AM <pre> 
+	* @throws 异常: <pre>
+	*/
+	public String changePasswd(String user) {
+		//TODO 
+		return "";
+	}
 }
